@@ -72,8 +72,24 @@ const config = {
 };
 ```
 
-```js
-postcss([require('postcss-theme-manager')({ config })]);
+```ts
+import postcss from 'postcss';
+import themeManager, { type PostcssThemeOptions } from 'postcss-theme-manager';
+
+const options: PostcssThemeOptions = {
+  config: {
+    default: {
+      light: {
+        color: 'white',
+      },
+      dark: {
+        color: 'black',
+      },
+    },
+  },
+};
+
+postcss([themeManager(options)]);
 ```
 
 See [PostCSS] docs for examples for your environment.

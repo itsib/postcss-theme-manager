@@ -55,7 +55,7 @@ export const configForComponent = (
  * Define postcss-theme-manager plugin
  * @param options
  */
-const postcssThemed: PluginCreator<PostcssThemeOptions> = (options = {}) => {
+const postcssThemeManager: PluginCreator<PostcssThemeOptions> = (options = {}) => {
   const { config, resolveTheme } = options;
   if (!config) {
     throw Error('No config provided to postcss-theme-manager');
@@ -104,6 +104,6 @@ const postcssThemed: PluginCreator<PostcssThemeOptions> = (options = {}) => {
   }
 }
 
-postcssThemed.postcss = true;
+postcssThemeManager.postcss = true;
 
-export { postcssThemed };
+export default postcssThemeManager;
