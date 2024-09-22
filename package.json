@@ -3,6 +3,9 @@
   "version": "0.0.4",
   "main": "dist/index.js",
   "private": false,
+  "files": [
+    "dist"
+  ],
   "description": "PostCSS plugin for generate multiple themes CSS files",
   "keywords": [
     "postcss",
