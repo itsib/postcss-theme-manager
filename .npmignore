@@ -3,8 +3,16 @@
 .editorconfig
 
 node_modules/
+scripts/
+images/
+src/
+.babelrc
+.eslintrc.cjs
 npm-debug.log
-
+package-lock.json
+tsconfig.build.json
+tsconfig.json
+tsconfig.build.tsbuildinfo
 
 *.test.js
 .travis.yml

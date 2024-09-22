@@ -20,7 +20,10 @@
   },
   "author": "Sergey Krainov <itsib.su@gmail.com>",
   "license": "MIT",
-  "repository": "https://github.com/itsib/postcss-theme-manager",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itsib/postcss-theme-manager.git"
+  },
   "bugs": {
     "url": "https://github.com/itsib/postcss-theme-manager/issues"
   },
