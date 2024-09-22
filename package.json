@@ -1,6 +1,6 @@
 {
   "name": "postcss-theme-manager",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "dist/index.js",
   "private": false,
   "description": "PostCSS plugin for generate multiple themes CSS files",
