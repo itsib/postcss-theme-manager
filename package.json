@@ -1,9 +1,11 @@
 {
   "name": "postcss-theme-manager",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "private": false,
   "type": "module",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "main": "./dist/index.umd.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
