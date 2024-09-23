@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="images/logo-primary.svg" alt="PostCSS logo" width="220" height="220">
+  <img src="images/logo.svg" alt="PostCSS logo" width="220" height="220">
   <p>
   </br>
     PostCSS plugin for generate multiple themes CSS files.

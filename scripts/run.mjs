@@ -1,21 +1,35 @@
-const postcss = require('postcss');
-const { postcssThemed } = require('../dist/index');
+import postcss from 'postcss';
+import postcssThemed from '../dist/index.js';
+
 
 const CSS = `
-  a {
-    color: @theme color;
+  :root {
+    --color: @theme color;
   }
 `;
 
 const Themed = postcssThemed({
   config: {
-    default: {
-      color: 'purple',
+    minimal: {
+      light: {
+        color: 'purple',
+      },
+      dark: {
+        color: 'red',
+      }
     },
-    mint: {
-      color: 'teal',
+    pretty: {
+      light: {
+        color: 'teal',
+      },
+      dark: {
+        color: 'green',
+      }
     },
-  }
+  },
+  defaultTheme: 'minimal',
+  lightClass: '.light',
+  darkClass: '.dark',
 });
 const PostCSS = postcss([Themed]);
 
