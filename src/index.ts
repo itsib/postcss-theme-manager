@@ -55,7 +55,7 @@ export const configForComponent = (
  * Define postcss-theme-manager plugin
  * @param options
  */
-const AtImport: PluginCreator<PostcssThemeOptions> = (options = {}) => {
+const postcssTheme: PluginCreator<PostcssThemeOptions> = (options = {}) => {
   const { config, resolveTheme } = options;
   if (!config) {
     throw Error('No config provided to postcss-theme-manager');
@@ -104,6 +104,8 @@ const AtImport: PluginCreator<PostcssThemeOptions> = (options = {}) => {
   }
 }
 
-AtImport.postcss = true;
+postcssTheme.postcss = true;
 
-export { AtImport };
+export { postcssTheme };
+
+export default postcssTheme;

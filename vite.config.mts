@@ -26,6 +26,7 @@ export default defineConfig(async ({ mode }): Promise<UserConfig> => {
       rollupOptions: {
         external: ['postcss'],
         output: {
+          exports: 'named',
           globals: {
             postcss: 'postcss',
           },
