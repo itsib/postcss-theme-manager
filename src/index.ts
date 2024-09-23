@@ -16,12 +16,17 @@ import type {
 
 const log = debug('postcss-theme-manager');
 
-/** Try to load component theme from same directory as css file */
-export const configForComponent = (
+/**
+ * Try to load component theme from same directory as css file
+ * @param cssFile
+ * @param rootTheme
+ * @param resolveTheme
+ */
+export function configForComponent(
   cssFile: string | undefined,
   rootTheme: PostcssThemeConfig,
   resolveTheme?: ThemeResolver
-): PostcssThemeConfig | {} => {
+): PostcssThemeConfig | {} {
   if (!cssFile) {
     return {};
   }
@@ -49,7 +54,7 @@ export const configForComponent = (
 
     return {};
   }
-};
+}
 
 /**
  * Define postcss-theme-manager plugin

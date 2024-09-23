@@ -1,6 +1,6 @@
-import postcss from 'postcss';
-import crypto from 'crypto';
-import fs from 'fs';
+import { decl, type Declaration, type Root, rule, type Rule } from 'postcss';
+import crypto from 'node:crypto';
+import fs from 'node:fs';
 import get from 'dlv';
 import { dset as set } from 'dset';
 import { localizeIdentifier } from '../utils/localize-identifier';
@@ -10,49 +10,44 @@ import type {
   PostcssStrictThemeConfig,
   PostcssThemeOptions,
   ScopedNameFunction,
-  SimpleTheme,
+  SimpleTheme
 } from '../types';
-import {
-  hasDarkMode,
-  parseThemeKey,
-  replaceTheme,
-  replaceThemeRoot,
-} from '../utils';
-import type { FlattenOptions } from 'flat';
+import { hasDarkMode, parseThemeKey, replaceTheme, replaceThemeRoot } from '../utils';
+import { flatten } from 'flat';
 
-interface Flatten<T, R> {
-  (target: T, options?: FlattenOptions): R;
-}
-
-let flatten: Flatten<SimpleTheme, Record<string, any>>;
-import('flat').then(_flat => flatten = _flat.flatten as any);
-
-
-/** Create a CSS variable override block for a given selector */
-const createModernTheme = (
+/**
+ * Create a CSS variable override block for a given selector
+ * @param selector
+ * @param theme
+ * @param transform
+ */
+function createModernTheme(
   selector: string,
   theme: SimpleTheme,
   transform: (value: string) => string
-) => {
-  const rule = postcss.rule({ selector });
-  const decls = Object.entries(flatten(theme)).map(([prop, value]) =>
-    postcss.decl({
-      prop: `--${transform(prop)}`,
-      value: `${value}`,
-    })
-  );
+): Rule | undefined {
+  const _rule = rule({ selector });
+  const flatted = flatten<SimpleTheme, Record<string, string>>(theme);
+
+  const decls = Object
+    .entries(flatted)
+    .map(([prop, value]) => decl({ prop: `--${transform(prop)}`, value: `${value}` }));
 
   if (decls.length === 0) {
     return;
   }
 
-  rule.append(decls);
+  _rule.append(decls);
 
-  return rule;
-};
+  return _rule;
+}
 
-/** Merge a given theme with a base theme */
-const mergeConfigs = (theme: LightDarkTheme, defaultTheme: LightDarkTheme) => {
+/**
+ * Merge a given theme with a base theme
+ * @param theme
+ * @param defaultTheme
+ */
+function mergeConfigs(theme: LightDarkTheme, defaultTheme: LightDarkTheme): LightDarkTheme {
   const merged = defaultTheme;
 
   for (const [colorScheme, values] of Object.entries(theme)) {
@@ -66,21 +61,23 @@ const mergeConfigs = (theme: LightDarkTheme, defaultTheme: LightDarkTheme) => {
   }
 
   return merged;
-};
+}
 
-const defaultLocalizeFunction = (
-  name: string,
-  filePath: string,
-  css: string
-) => {
+/**
+ * Create filename
+ * @param name
+ * @param filePath
+ * @param css
+ */
+function defaultLocalizeFunction(name: string, filePath: string, css: string): string {
   const hash = crypto.createHash('md5').update(css).digest('hex').slice(0, 6);
   return `${filePath || 'default'}-${name}-${hash}`;
-};
+}
 
-const getLocalizeFunction = (
+function getLocalizeFunction(
   modules: string | ScopedNameFunction | undefined,
   resourcePath: string | undefined
-) => {
+): ((name: string) => string) {
   if (typeof modules === 'function' || modules === 'default') {
     let fileContents = '';
     if (resourcePath) {
@@ -95,25 +92,30 @@ const getLocalizeFunction = (
   }
 
   return (name: string) => localizeIdentifier(resourcePath, modules || '[local]', name);
-};
+}
 
-const declarationsAsString = ({ nodes }: postcss.Rule) => {
+function declarationsAsString({ nodes }: Rule): string {
   if (!nodes) {
     return '';
   }
 
   return nodes
-    .filter((node): node is postcss.Declaration => node.type === 'decl')
+    .filter((node): node is Declaration => node.type === 'decl')
     .map((declaration) => `${declaration.prop}: ${declaration.value};`)
     .join('');
-};
+}
 
-/** Accomplish theming by creating CSS variable overrides  */
-export const modernTheme = (
-  root: postcss.Root,
+/**
+ * Accomplish theming by creating CSS variable overrides
+ * @param root
+ * @param componentConfig
+ * @param options
+ */
+export function modernTheme(
+  root: Root,
   componentConfig: PostcssStrictThemeConfig,
   options: PostcssThemeOptions
-) => {
+): void {
   const usage = new Map<string, number>();
   const defaultTheme = options.defaultTheme || 'default';
   const singleTheme = options.forceSingleTheme || undefined;
@@ -279,7 +281,7 @@ export const modernTheme = (
 
   // 2a. If generating a single theme, simply generate the default
   if (singleTheme) {
-    const rules: (postcss.Rule | undefined)[] = [];
+    const rules: (Rule | undefined)[] = [];
     const rootRules = addRootTheme(mergedSingleThemeConfig);
 
     if (hasMergedDarkMode) {
@@ -297,11 +299,11 @@ export const modernTheme = (
       rules.push(rootRules);
     }
 
-    root.append(...rules.filter((x): x is postcss.Rule => Boolean(x)));
+    root.append(...rules.filter((x): x is Rule => Boolean(x)));
     return;
   }
 
-  const rules: (postcss.Rule | undefined)[] = [];
+  const rules: (Rule | undefined)[] = [];
 
   // 2b. Under normal operation, generate CSS variable blocks for each theme
   Object.entries(componentConfig).forEach(([theme, themeConfig]) => {
@@ -334,7 +336,7 @@ export const modernTheme = (
     }
   });
 
-  const definedRules: postcss.Rule[] = [];
+  const definedRules: Rule[] = [];
 
   rules.forEach((rule) => {
     if (!rule) {
@@ -354,4 +356,4 @@ export const modernTheme = (
   });
 
   root.append(...definedRules);
-};
+}
