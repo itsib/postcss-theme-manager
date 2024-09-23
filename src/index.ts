@@ -12,6 +12,7 @@ import type {
   PostcssThemeConfig,
   PostcssThemeOptions,
   ThemeResolver,
+  ScopedNameFunction,
 } from './types';
 
 const log = debug('postcss-theme-manager');
@@ -60,7 +61,7 @@ export function configForComponent(
  * Define postcss-theme-manager plugin
  * @param options
  */
-const postcssTheme: PluginCreator<PostcssThemeOptions> = (options = {}) => {
+const themeManager: PluginCreator<PostcssThemeOptions> = (options = {}) => {
   const { config, resolveTheme } = options;
   if (!config) {
     throw Error('No config provided to postcss-theme-manager');
@@ -109,8 +110,15 @@ const postcssTheme: PluginCreator<PostcssThemeOptions> = (options = {}) => {
   }
 }
 
-postcssTheme.postcss = true;
+themeManager.postcss = true;
 
-export { postcssTheme };
+export {
+  themeManager,
+  ComponentTheme,
+  PostcssThemeConfig,
+  PostcssThemeOptions,
+  ThemeResolver,
+  ScopedNameFunction,
+};
 
-export default postcssTheme;
+export default themeManager;
