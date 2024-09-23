@@ -1,5 +1,5 @@
 import type { PluginCreator } from 'postcss';
-import fs from 'fs';
+import fs from 'node:fs';
 import debug from 'debug';
 import merge from 'deepmerge';
 import * as caniuse from 'caniuse-api';

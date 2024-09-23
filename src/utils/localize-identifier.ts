@@ -1,5 +1,5 @@
 import cssesc from 'cssesc';
-import path from 'path';
+import path from 'node:path';
 
 const filenameReservedRegex = /[<>:"/\\|?*\x00-\x1F]/g;
 const reControlChars = /[\u0000-\u001f\u0080-\u009f]/g;
